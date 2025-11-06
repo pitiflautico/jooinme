@@ -1,0 +1,390 @@
+
+Nombre del Proyecto: JoinMe
+Framework: Laravel 11 (PHP 8.3+)
+Base de Datos: PostgreSQL
+Frontend: Blade + Livewire (posibilidad de migración a Vue 3)
+Estrategia DevOps: CI/CD (GitHub Actions), entornos staging y producción, despliegue automático en Forge/VPS
+Sistema de Control de Versiones: Git
+
+--------------------------------------------------------
+OBJETIVO GENERAL
+--------------------------------------------------------
+JoinMe es una plataforma de microcomunidades diseñada para agendar y sostener conversaciones periódicas entre personas con intereses comunes. Cada usuario puede organizar o unirse a charlas recurrentes (semanales, mensuales...) en torno a un tema definido. A diferencia de plataformas sociales genéricas, JoinMe prioriza la intimidad, la recurrencia, la calidez visual y el crecimiento personal compartido.
+
+--------------------------------------------------------
+FASE 1 - FUNDAMENTOS DEL SISTEMA (BACKEND CORE)
+--------------------------------------------------------
+
+1.1 MODELOS BASE:
+- User (nombre, email, avatar, intereses, descripción personal, disponibilidad, preferencias)
+- Topic (nombre, slug, categoría)
+- Conversation (título, descripción, frecuencia, hora, duración, privacidad, owner_id)
+- Participation (user_id, conversation_id, status: pending/accepted/rejected)
+- Notification (user_id, type, message, read_at)
+- ExternalLink (conversation_id, tipo [meet, zoom, etc.], URL)
+- ScheduleSlot (conversation_id, datetime exacto de los próximos encuentros)
+- Feedback (participation_id, rating, comentario opcional)
+
+1.2 RELACIONES:
+- User hasMany Conversations (como creador)
+- User belongsToMany Conversations (como participante)
+- Conversation hasMany Participations
+- Conversation hasMany ScheduleSlots
+- Conversation hasOne ExternalLink
+
+1.3 FUNCIONALIDADES INTERNAS:
+- Sistema de autenticación con Laravel Sanctum (API y SPA)
+- Middleware para acceso a salas privadas
+- Generación automática de próximos encuentros (ScheduleSeeder)
+- Integración con API externa para crear enlaces en Zoom / Google Meet
+- Sistema de notificaciones internas (base Eloquent)
+- Jobs para recordatorios programados vía mail y/o push
+- System observer para logs y métricas (actividad de usuarios)
+
+--------------------------------------------------------
+FASE 2 - FRONTEND Y EXPERIENCIA DE USUARIO
+--------------------------------------------------------
+
+2.1 LANDING PAGE (pública)
+- Hero con call to action (“Crece compartiendo...”)
+- Sección "Cómo funciona JoinMe"
+- Ejemplos de conversaciones reales (mock con topics)
+- CTA final con registro
+
+2.2 AUTENTICACIÓN
+- Registro con validación (nombre, email, password, intereses)
+- Login clásico + OAuth (Google, opcional)
+- Recuperación de contraseña
+- Confirmación de email
+
+2.3 DASHBOARD PRIVADO
+- Secciones:
+  - Mis Conversaciones (como organizador o invitado)
+  - Crear nueva conversación
+  - Explorar otras salas
+  - Estadísticas personales (tiempo conversado, temas más recurrentes)
+  - Configuración personal y logout
+
+2.4 CREACIÓN DE CONVERSACIONES
+- Paso 1: título + descripción
+- Paso 2: selección de tags/intereses + visibilidad (pública/privada)
+- Paso 3: frecuencia (semanal, quincenal, mensual, puntual)
+- Paso 4: día y hora propuesta
+- Paso 5: agregar invitados (por nombre o email)
+- Paso 6: generar o pegar enlace externo (opcional)
+- Validaciones front y back (Livewire)
+- Confirmación visual del evento
+
+2.5 EXPLORADOR DE SALAS
+- Filtros:
+  - Por tema
+  - Por frecuencia
+  - Por idioma
+  - Por próximas fechas
+- Vista en grid o lista
+- Botón de “unirse” (si pública) o “solicitar acceso” (si privada)
+
+2.6 VISTA DE DETALLE DE CONVERSACIÓN
+- Información completa (título, owner, descripción, frecuencia, próximos encuentros)
+- Participantes confirmados
+- Link externo si aceptado
+- Muro opcional para mensajes asíncronos previos
+- Botón de “Recordarme este evento” (descarga .ics + sincronización con Google Calendar)
+
+--------------------------------------------------------
+FASE 3 - ADMINISTRACIÓN Y BACKOFFICE
+--------------------------------------------------------
+
+3.1 DASHBOARD ADMIN
+- Visualización general:
+  - Total de usuarios
+  - Conversaciones creadas
+  - Participación media
+  - Temas más populares
+- Gestión de:
+  - Usuarios (bloquear, editar, ver actividad)
+  - Conversaciones (archivar, eliminar, moderar contenido)
+  - Reportes de usuarios
+  - Feedback negativo
+
+3.2 SISTEMA DE REPORTES
+- Desde vista pública, usuarios pueden marcar:
+  - Conversación inapropiada
+  - Usuario ofensivo
+- Backend genera log automático para revisión
+
+--------------------------------------------------------
+FASE 4 - INTEGRACIONES EXTERNAS Y EXTRAS
+--------------------------------------------------------
+
+4.1 INTEGRACIÓN GOOGLE CALENDAR
+- Scopes:
+  - calendar.events.readonly
+  - calendar.events.insert
+- Permite agregar eventos automáticamente desde JoinMe
+- Permite recordatorios push si se otorga consentimiento
+
+4.2 INTEGRACIÓN ZOOM / MEET / JITSI
+- Opción al crear una conversación:
+  - Crear enlace de Zoom via API (requiere tokens)
+  - Incrustar link generado por el usuario
+  - O usar servicio open-source (Jitsi)
+
+4.3 RECORDATORIOS AUTOMÁTICOS
+- Notificación por email 24h antes
+- Recordatorio push (si app móvil) o por mail 1h antes
+- Posibilidad de añadir al calendario con .ics descargable
+
+4.4 FEEDBACK POST-CHARLA
+- Al finalizar una conversación, se ofrece a los participantes:
+  - ¿Te ha sido útil esta conversación? [1-5 estrellas]
+  - Comentario opcional
+- Se utiliza para curar recomendaciones futuras y moderar organizadores
+
+--------------------------------------------------------
+FASE 5 - EXPANSIÓN Y APP MÓVIL (ROADMAP)
+--------------------------------------------------------
+
+5.1 MODO ASÍNCRONO
+- Opción de conversación por texto en modo foros
+- Ideal para personas que no pueden asistir en tiempo real
+
+5.2 MATCH AUTOMÁTICO
+- Sistema de sugerencia de conversaciones por afinidad
+- Algoritmo basado en:
+  - Intereses comunes
+  - Disponibilidad compatible
+  - Participación anterior
+
+5.3 APLICACIÓN MÓVIL
+- Versión 1: WebView con login persistente y notificaciones push
+- Versión 2: React Native con soporte offline y grabación de notas de voz
+
+5.4 FUNCIONALIDAD PREMIUM
+- Agenda privada con más de X invitados
+- Espacios verificados
+- Conversaciones destacadas
+- Menciones en la home
+
+--------------------------------------------------------
+FIN DEL DOCUMENTO
+--------------------------------------------------------
+
+--------------------------------------------------------
+FASE 6 - FUNCIONALIDADES SOCIALES Y MODERACIÓN
+--------------------------------------------------------
+
+6.1 VALORACIÓN DE PARTICIPANTES
+- Al finalizar cada conversación, los usuarios podrán valorar:
+  - A la conversación (1 a 5 estrellas)
+  - A cada participante (opcional, solo si hubo interacción significativa)
+- Se mostrará la valoración promedio del usuario en su perfil (visible solo para organizadores)
+- Sistema antifraude:
+  - No se permite valorar si no se asistió
+  - No se pueden valorar a uno mismo ni duplicar valoraciones
+
+6.2 BLOQUEO DE USUARIOS
+- Cualquier usuario podrá:
+  - Bloquear a otro usuario para que no le pueda invitar más
+  - Silenciar notificaciones de ese usuario
+- Los usuarios bloqueados no podrán ver el perfil completo ni solicitar acceso a salas organizadas por quien los bloqueó
+
+6.3 INVITACIONES Y ACCESOS
+- Tres tipos de acceso a conversaciones:
+  1. **Público**: cualquiera puede unirse sin aprobación
+  2. **Moderado**: cualquiera puede solicitar acceso, el organizador aprueba
+  3. **Privado**: acceso solo por invitación directa (email o usuario registrado)
+
+6.4 CONVERSACIONES FÍSICAS / ONLINE / MIXTAS
+- Al crear una conversación, el organizador puede elegir:
+  - Tipo: Online / Presencial / Mixto
+  - Ubicación física (si aplica): dirección completa + Google Maps embed
+  - Plataforma online (Zoom, Meet, Jitsi) o híbrida
+- Los participantes podrán filtrar en el buscador por:
+  - Tipo de conversación
+  - Radio de cercanía (si físicas)
+
+6.5 FUNCIONES SOCIALES EXTRAS (ROADMAP)
+- Seguimiento entre usuarios: “Seguir” a otros perfiles para ver sus próximas charlas
+- Recomendaciones de personas compatibles (match social)
+- Círculos privados: grupos cerrados con membresía y calendario recurrente
+- Menciones (@usuario) en comentarios previos o posteriores a la conversación
+- Mensajes directos entre participantes de una misma charla (limitado a 48h después del evento)
+
+
+--------------------------------------------------------
+FASE 7 - PANEL DE ADMINISTRACIÓN CON FILAMENT
+--------------------------------------------------------
+
+7.1 STACK ADMINISTRATIVO
+- Filament Admin Panel (https://filamentphp.com/)
+  - Laravel 11 compatible
+  - CRUD dinámico para todos los modelos
+  - Gestión visual con filtros, relaciones y métricas en dashboard
+- Roles:
+  - Super Admin (gestión total)
+  - Moderador (gestión de reportes y usuarios)
+  - Viewer (solo lectura, para análisis y equipo de soporte)
+
+7.2 MÓDULOS DISPONIBLES EN ADMINISTRADOR
+- Usuarios
+  - Listado y búsqueda avanzada
+  - Bloqueo manual o eliminación de cuentas
+  - Edición de perfil y ver historial de actividad
+- Conversaciones
+  - Aprobar o archivar manualmente
+  - Ver participantes, feedback y próximos encuentros
+  - Forzar cierre de conversación
+- Feedback
+  - Valoraciones por conversación o usuario
+  - Detección de abusos o spam en comentarios
+- Reportes
+  - Reportes por comportamiento inapropiado
+  - Historial por usuario reportado
+- Estadísticas:
+  - Participación por tema, usuario, frecuencia
+  - Ratio de asistencia vs no-show
+  - Mapa de calor por zonas geográficas (si se activa ubicación)
+- Configuración global
+  - Control de visibilidad de tipos de conversación
+  - Política de privacidad, términos, textos dinámicos
+
+--------------------------------------------------------
+FASE 8 - FUNCIONALIDADES COMPLETAS RESUMIDAS
+--------------------------------------------------------
+
+BACKEND CORE (Laravel 11)
+✔ Autenticación con Sanctum
+✔ API interna REST (posible extensión a GraphQL)
+✔ Sistema de eventos y jobs para notificaciones y recordatorios
+✔ Scheduler para crear nuevos encuentros automáticamente
+✔ Relacionamiento completo entre entidades: users, conversations, participations, feedback, schedule, etc.
+✔ Sistema de logs internos y observadores (UserObserver, ParticipationObserver)
+✔ Sistema de configuración y feature toggles (via Filament Settings plugin)
+
+ADMIN PANEL (Filament)
+✔ Panel unificado y visual para todo el modelo de datos
+✔ Gestión masiva de usuarios, salas, reportes
+✔ Métricas, gráficos y filtros avanzados
+✔ Roles y permisos
+
+FRONTEND
+✔ Registro/login/email confirmación
+✔ Dashboard con panel de usuario
+✔ Crear, explorar y unirse a conversaciones
+✔ Conversaciones con frecuencia, modalidad (online, presencial, mixta), duración, participantes
+✔ Valoración post-charla de participantes y conversación
+✔ Enlace de videollamada o lugar físico embebido
+✔ Calendario ICS + Google Calendar sync
+✔ Bloqueo de usuarios
+✔ Reportes
+✔ Salas públicas, moderadas o privadas
+✔ Filtros por tema, tipo, cercanía y frecuencia
+✔ Vista de perfil de usuario con intereses y actividad
+✔ Notificaciones por email y push (si app)
+✔ Feedback social y reputación
+
+INTEGRACIONES
+✔ Google Calendar API
+✔ Zoom API (token-based)
+✔ Alternativa libre: Jitsi (iframe embebido)
+✔ Email + notificación programada
+✔ WebView + app móvil con push (Expo / React Native)
+
+ROADMAP
+✔ Algoritmo de matchmaking por intereses
+✔ Función de “seguir usuario”
+✔ Círculos privados y foros
+✔ Gamificación (niveles, logros)
+✔ App móvil offline y mensajes de voz
+
+
+--------------------------------------------------------
+FASE 9 - SISTEMA SOCIAL COMPLETO Y EXPERIENCIA DE USUARIO
+--------------------------------------------------------
+
+9.1 RED SOCIAL DE CONVERSACIONES
+JoinMe se comporta también como una red social íntima centrada en intereses y conversaciones recurrentes. Los usuarios pueden:
+
+- Crear su perfil con:
+  - Foto
+  - Descripción personal (bio)
+  - Intereses (tags editables)
+  - Disponibilidad
+  - Valoraciones recibidas
+  - Conversaciones pasadas y futuras
+
+- Explorar otros usuarios:
+  - Filtros por intereses
+  - Filtros por frecuencia (diaria, semanal, mensual)
+  - Ubicación (para encuentros presenciales)
+  - Compatibilidad sugerida
+  - Seguimiento (seguir usuario)
+  - Invitación directa a charlas
+
+- Feed personalizado:
+  - “Te puede interesar unirte a esta charla”
+  - “Usuarios como tú han creado estas salas”
+  - “Esta semana se habla mucho de...”
+
+9.2 SISTEMA DE RECORDATORIOS Y AUTOMATIZACIÓN
+- Todos los eventos agendados aparecen en:
+  - Dashboard del usuario
+  - Vista de calendario integrada
+- Notificaciones automáticas:
+  - Email + push 24h antes del evento
+  - Segundo aviso 1h antes
+  - Botón para añadir al calendario (.ics o integración Google Calendar)
+- Reminders programables desde backend con Laravel Scheduler + Jobs
+
+9.3 SISTEMA DE INVITACIONES Y CONTACTOS
+- Invitar por:
+  - Email
+  - Nombre de usuario
+  - Compartir enlace único con permisos de acceso
+- Lista de invitados gestionable
+  - Estado: pendiente / aceptado / rechazado
+  - Posibilidad de volver a invitar
+- Confirmación visual de los asistentes antes de cada evento
+- Invitar a personas fuera de la plataforma con enlaces mágicos de acceso temporal
+
+9.4 GESTIÓN AVANZADA DE CONVERSACIONES
+- Sala virtual con:
+  - Imagen de cabecera
+  - Lista visible de participantes
+  - Enlace al evento (si online)
+  - Dirección con mapa (si presencial)
+  - Botón para indicar “Asistiré” o “No puedo”
+  - Chat previo al evento (opcional)
+  - Botón “Finalizar evento” (solo organizador)
+- Posterior al evento:
+  - Resumen de asistencia
+  - Feedback de los participantes
+  - Reseñas y notas compartidas (si se activa)
+
+9.5 NIVELES DE PARTICIPACIÓN Y REPUTACIÓN
+- Cada usuario acumula “karma social” al participar, valorar y crear charlas
+- Sistema de logros:
+  - Primer encuentro
+  - 10 participantes satisfechos
+  - Asistencia regular durante 1 mes
+- Reputación visible para organizadores:
+  - “Participante comprometido”
+  - “Organizador destacado”
+
+9.6 OTRAS FUNCIONES SOCIALES E INTERACTIVAS
+- Menciones entre usuarios (@nombre)
+- Comentarios en las páginas de eventos (antes y después)
+- Sistema de “me interesa este tema”
+- Favoritos: guardar charlas para más adelante
+- Historial de conversaciones pasadas y grabaciones (si se habilita)
+- Modo “invisible” para usuarios que desean navegar sin mostrar su estado
+
+--------------------------------------------------------
+VISIÓN FINAL
+--------------------------------------------------------
+
+JoinMe es más que una plataforma para videollamadas recurrentes: es una red social basada en conversaciones humanas significativas. Cada encuentro es una oportunidad para conocerse, compartir, aprender y crecer. La interfaz es limpia, acogedora y emocionalmente cercana. El diseño de UX gira en torno al bienestar, la afinidad temática y la construcción de comunidad.
+
+La meta: que cada persona tenga al menos una conversación semanal que le nutra y le recuerde que no está sola.
+
