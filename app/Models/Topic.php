@@ -7,6 +7,32 @@ use Illuminate\Database\Eloquent\Model;
 
 class Topic extends Model
 {
-    /** @use HasFactory<\Database\Factories\TopicFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'category',
+        'description',
+        'icon',
+        'color',
+        'is_active',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
+
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class);
+    }
+
+    public function activeConversations()
+    {
+        return $this->conversations()->where('status', 'active');
+    }
 }

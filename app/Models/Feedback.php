@@ -7,6 +7,46 @@ use Illuminate\Database\Eloquent\Model;
 
 class Feedback extends Model
 {
-    /** @use HasFactory<\Database\Factories\FeedbackFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'schedule_slot_id',
+        'user_id',
+        'conversation_id',
+        'rated_user_id',
+        'rating',
+        'comment',
+        'attended',
+        'would_recommend',
+        'tags',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'attended' => 'boolean',
+            'would_recommend' => 'boolean',
+            'tags' => 'array',
+        ];
+    }
+
+    public function scheduleSlot()
+    {
+        return $this->belongsTo(ScheduleSlot::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function conversation()
+    {
+        return $this->belongsTo(Conversation::class);
+    }
+
+    public function ratedUser()
+    {
+        return $this->belongsTo(User::class, 'rated_user_id');
+    }
 }
