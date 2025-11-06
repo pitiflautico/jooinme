@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Participation>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Message>
  */
-class ParticipationFactory extends Factory
+class MessageFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,11 +19,10 @@ class ParticipationFactory extends Factory
         return [
             'user_id' => \App\Models\User::factory(),
             'conversation_id' => \App\Models\Conversation::factory(),
-            'status' => 'pending',
-            'role' => 'participant',
-            'join_message' => fake()->optional()->sentence(),
-            'joined_at' => null,
-            'left_at' => null,
+            'content' => fake()->sentence(),
+            'type' => 'text',
+            'is_edited' => false,
+            'edited_at' => null,
         ];
     }
 }
