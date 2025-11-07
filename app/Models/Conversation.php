@@ -147,6 +147,11 @@ class Conversation extends Model
         return $this->hasMany(Attendance::class);
     }
 
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
+    }
+
     // Helper Methods
 
     public function isOwner(User $user): bool

@@ -15,7 +15,12 @@ class Feedback extends Model
         'conversation_id',
         'rated_user_id',
         'rating',
+        'content_rating',
+        'organization_rating',
+        'atmosphere_rating',
         'comment',
+        'testimonial',
+        'is_public',
         'attended',
         'would_recommend',
         'tags',
@@ -26,6 +31,7 @@ class Feedback extends Model
         return [
             'attended' => 'boolean',
             'would_recommend' => 'boolean',
+            'is_public' => 'boolean',
             'tags' => 'array',
         ];
     }
