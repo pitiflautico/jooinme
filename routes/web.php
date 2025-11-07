@@ -7,6 +7,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ScheduleSlotController;
+use App\Http\Controllers\OrganizerDashboardController;
 use Illuminate\Support\Facades\Route;
 
 // Landing Page
@@ -59,6 +60,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         return view('dashboard', compact('myConversations', 'organizing', 'stats'));
     })->name('dashboard');
+
+    // Organizer Dashboard
+    Route::get('/organizer/dashboard', [OrganizerDashboardController::class, 'index'])->name('organizer.dashboard');
 
     // Conversations (Auth required)
     Route::post('/conversations/{conversation}/join', [ConversationController::class, 'join'])->name('conversations.join');
