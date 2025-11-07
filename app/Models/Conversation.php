@@ -30,27 +30,42 @@ class Conversation extends Model
         'privacy',
         'max_participants',
         'min_participants',
+        'current_participants',
+        'meeting_platform',
+        'meeting_url',
         'cover_image',
         'tags',
+        'settings',
         'status',
         'is_featured',
+        'is_active',
         'allow_chat',
         'allow_recording',
         'auto_approve',
+        'require_approval',
+        'auto_confirm',
         'first_session_at',
         'last_session_at',
+        'starts_at',
+        'ends_at',
     ];
 
     protected function casts(): array
     {
         return [
             'tags' => 'array',
+            'settings' => 'array',
             'is_featured' => 'boolean',
+            'is_active' => 'boolean',
             'allow_chat' => 'boolean',
             'allow_recording' => 'boolean',
             'auto_approve' => 'boolean',
+            'require_approval' => 'boolean',
+            'auto_confirm' => 'boolean',
             'first_session_at' => 'datetime',
             'last_session_at' => 'datetime',
+            'starts_at' => 'datetime',
+            'ends_at' => 'datetime',
         ];
     }
 
