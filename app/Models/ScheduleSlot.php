@@ -18,6 +18,8 @@ class ScheduleSlot extends Model
         'attended_participants',
         'notes',
         'recording_url',
+        'meeting_url',
+        'metadata',
         'started_at',
         'ended_at',
     ];
@@ -29,6 +31,7 @@ class ScheduleSlot extends Model
             'ends_at' => 'datetime',
             'started_at' => 'datetime',
             'ended_at' => 'datetime',
+            'metadata' => 'array',
         ];
     }
 
