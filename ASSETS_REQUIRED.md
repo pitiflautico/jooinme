@@ -1,29 +1,32 @@
 # Assets Requeridos para la Home - JoinMe
 
-Este documento detalla todos los assets visuales (imágenes, fotos, iconos, ilustraciones) necesarios para completar el diseño pixel perfect de la landing page.
+Este documento detalla todos los assets visuales (imágenes, fotos, iconos, ilustraciones) necesarios para completar el diseño pixel perfect de la landing page de JoinMe.
+
+**Actualizado:** Se ha adaptado todo el contenido a JoinMe.com - plataforma de conversaciones significativas.
 
 ## 📊 Resumen
 
-- **Total de assets necesarios**: 23
-- **Prioridad Alta**: 8 items
-- **Prioridad Media**: 10 items
+- **Total de assets necesarios**: 20
+- **Prioridad Alta**: 6 items
+- **Prioridad Media**: 9 items
 - **Prioridad Baja**: 5 items
 
 ---
 
 ## 🎯 Assets de Prioridad Alta
 
-### 1. Hero Section - Video Conference Mockup
-**Tipo**: Imagen/Screenshot
+### 1. Hero Section - Conversación en Vivo Mockup
+**Tipo**: Imagen/Screenshot o Ilustración
 **Dimensiones**: 1200x800px (ratio 3:2)
 **Formato**: PNG o WebP
-**Descripción**: Captura de pantalla de una videollamada real en la plataforma, mostrando:
-- Ventana principal del navegador con interfaz de video conferencia
-- Video principal grande de un participante sonriendo (profesional, inclusivo)
-- 4 thumbnails de participantes en la parte inferior
-- Aspecto moderno, limpio y profesional
+**Descripción**: Mockup de una conversación JoinMe en vivo, mostrando:
+- Ventana principal del navegador con interfaz de conversación
+- Pantalla principal mostrando conversación activa (puede ser videollamada o sala de chat)
+- 4 thumbnails de participantes diversos en la parte inferior
+- Aspecto moderno, acogedor y profesional
+- Iconos flotantes animados alrededor (ya implementados en CSS)
 **Ubicación**: Hero section, lado derecho
-**Notas**: Esta es LA imagen principal de la página. Debe ser de muy alta calidad y mostrar diversidad (género, etnia, edad).
+**Notas**: Esta es LA imagen principal de la página. Debe transmitir calidez, conexión humana y diversidad (género, etnia, edad). Actualmente usa emoji 💬 placeholder.
 
 ### 2. Participant Thumbnails (Set de 4)
 **Tipo**: Fotografías de personas
@@ -37,26 +40,24 @@ Este documento detalla todos los assets visuales (imágenes, fotos, iconos, ilus
 **Ubicación**: Hero section, thumbnails en la tarjeta de video
 **Notas**: Deben verse naturales, no stock photos genéricas. Diversidad es clave.
 
-### 3. Logos de Partners (5 logos)
-**Tipo**: Logos SVG o PNG
-**Dimensiones**: Variable, pero equilibrados en tamaño visual
-**Formato**: SVG preferido, PNG con fondo transparente
-**Lista**:
-- Luminous (logo empresarial tech)
-- Playersmith (logo gaming/social)
-- Cisco Grip (logo corporativo)
-- Metadache (logo startup moderna)
-- Intertech (logo tecnología)
-**Ubicación**: Sección de partners (fondo oscuro)
-**Notas**: Si no hay partners reales, usar logos placeholders minimalistas. Pueden ser monocromáticos en blanco.
+### 3. Logo JoinMe Principal
+**Tipo**: Logo SVG
+**Dimensiones**: Variable (responsive)
+**Formato**: SVG preferido
+**Descripción**: Logo principal de JoinMe con versiones:
+- Logo completo para header
+- Versión compacta para mobile
+- Versión monocromática para footer
+**Ubicación**: Navegación, footer, favicon
+**Notas**: Actualmente usa texto "JoinMe" en tipografía serif. Crear logo profesional que refleje conexión y comunidad.
 
-### 4. Testimonial - Foto de Stefanie Muller
+### 4. Testimonial - Foto de María González
 **Tipo**: Fotografía profesional
 **Dimensiones**: 120x120px (círculo)
 **Formato**: JPG o WebP
-**Descripción**: Foto profesional de mujer ejecutiva, sonriendo, fondo neutro
+**Descripción**: Foto profesional de mujer emprendedora, sonriendo, fondo neutro o ambiente de startup
 **Ubicación**: Sección de testimonios
-**Notas**: Debe verse profesional y creíble. Si es placeholder, usar ilustración de avatar.
+**Notas**: Debe verse auténtica, profesional y aspiracional. María González es Fundadora de TechStart. Si es placeholder, usar avatar realista.
 
 ---
 
@@ -74,29 +75,29 @@ Este documento detalla todos los assets visuales (imágenes, fotos, iconos, ilus
 **Ubicación**: Sección "What Advantages"
 **Notas**: Actualmente usando SVG genéricos de Heroicons. Sería ideal tener iconos custom que combinen con la estética de la marca.
 
-### 6. Ilustración - Make A Room
+### 6. Ilustración - Explora Temas
 **Tipo**: Ilustración
 **Dimensiones**: 400x300px
 **Formato**: PNG o SVG
-**Descripción**: Ilustración isométrica o flat de una sala de video conferencia siendo creada, con paleta de colores morada/oscura
+**Descripción**: Ilustración isométrica o flat mostrando búsqueda/exploración de conversaciones por temas, con paleta morada/oscura. Puede incluir iconos de diferentes temas (tech, arte, salud, etc.)
 **Ubicación**: "How It Works" - Paso 1
-**Notas**: Actualmente usando emoji 🎨. Reemplazar con ilustración profesional.
+**Notas**: Actualmente usando emoji 🔍. Reemplazar con ilustración que transmita descubrimiento y variedad.
 
-### 7. Ilustración - Share Link
+### 7. Ilustración - Únete o Crea
 **Tipo**: Ilustración
 **Dimensiones**: 400x300px
 **Formato**: PNG o SVG
-**Descripción**: Ilustración de un enlace siendo compartido, con iconos de redes sociales, fondo claro con gradiente amarillo/morado
+**Descripción**: Ilustración mostrando dual choice: unirse a conversación existente O crear nueva. Fondo claro con gradiente amarillo/morado. Puede mostrar botones o iconos de "join" y "create"
 **Ubicación**: "How It Works" - Paso 2
-**Notas**: Debe mostrar el concepto de compartir/distribuir.
+**Notas**: Debe transmitir flexibilidad y empoderamiento del usuario.
 
-### 8. Ilustración - Let's Enjoy Chat
+### 8. Ilustración - Conecta y Crece
 **Tipo**: Ilustración
 **Dimensiones**: 400x300px
 **Formato**: PNG o SVG
-**Descripción**: Grid 2x2 de avatares/fotos de personas sonriendo en videollamada
+**Descripción**: Grid 2x2 de avatares diversos conectados, mostrando networking y comunidad. Puede incluir líneas de conexión entre avatares.
 **Ubicación**: "How It Works" - Paso 3
-**Notas**: Actualmente usando gradientes de color. Ideal tener fotos reales o avatares ilustrados.
+**Notas**: Actualmente usando gradientes de color. Debe transmitir conexión, crecimiento y comunidad.
 
 ### 9. Ilustración - Virtual Assistant Services
 **Tipo**: Ilustración de interfaz
