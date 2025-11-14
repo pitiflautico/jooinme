@@ -26,6 +26,7 @@
     <link href="{{ asset('ki-admin/vendor/apexcharts.css') }}" rel="stylesheet" type="text/css">
 
     <!-- Main CSS -->
+    <link href="{{ asset('ki-admin/css/variables.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('ki-admin/css/style.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('ki-admin/css/responsive.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ asset('ki-admin/css/custom.css') }}" rel="stylesheet" type="text/css">
@@ -102,8 +103,7 @@
     <script src="{{ asset('ki-admin/vendor/apexcharts.min.js') }}"></script>
 
     <!-- Main JS -->
-    <script src="{{ asset('ki-admin/js/customizer.js') }}"></script>
-    <script src="{{ asset('ki-admin/js/script.js') }}"></script>
+    <script src="{{ asset('ki-admin/js/script-safe.js') }}"></script>
 
     @stack('scripts')
 </body>
