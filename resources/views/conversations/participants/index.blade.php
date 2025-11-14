@@ -1,199 +1,228 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Gestionar Participantes: {{ $conversation->title }}
-            </h2>
-            <div class="flex gap-2">
-                <a href="{{ route('conversations.participants.invite', $conversation) }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition text-sm">
-                    + Invitar participantes
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Gestionar Participantes: {{ $conversation->title }}</h2>
+            <div class="d-flex gap-2">
+                <a href="{{ route('conversations.participants.invite', $conversation) }}" class="btn btn-primary btn-sm">
+                    <i class="ti ti-plus me-1"></i>
+                    Invitar participantes
                 </a>
-                <a href="{{ route('conversations.show', $conversation) }}" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition text-sm">
+                <a href="{{ route('conversations.show', $conversation) }}" class="btn btn-secondary btn-sm">
                     Ver conversación
                 </a>
             </div>
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <!-- Messages -->
-            @if(session('success'))
-                <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-600 text-green-700 dark:text-green-200 px-4 py-3 rounded relative">
-                    {{ session('success') }}
-                </div>
-            @endif
+    <!-- Messages -->
+    @if(session('success'))
+        <x-backend.alert type="success" class="mb-4">
+            {{ session('success') }}
+        </x-backend.alert>
+    @endif
 
-            @if(session('error'))
-                <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-600 text-red-700 dark:text-red-200 px-4 py-3 rounded relative">
-                    {{ session('error') }}
-                </div>
-            @endif
+    @if(session('error'))
+        <x-backend.alert type="danger" class="mb-4">
+            {{ session('error') }}
+        </x-backend.alert>
+    @endif
 
-            <!-- Stats Overview -->
-            <div class="grid md:grid-cols-4 gap-6">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">Participantes Activos</div>
-                    <div class="text-3xl font-bold text-gray-900 dark:text-white">{{ $accepted->count() }}</div>
-                    <div class="text-xs text-gray-500 mt-1">de {{ $conversation->max_participants }} máximo</div>
+    <!-- Stats Overview -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <x-backend.card>
+                <div class="card-body text-center">
+                    <div class="small text-muted mb-2">Participantes Activos</div>
+                    <div class="h2 mb-1">{{ $accepted->count() }}</div>
+                    <div class="small text-muted">de {{ $conversation->max_participants }} máximo</div>
                 </div>
+            </x-backend.card>
+        </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">Solicitudes Pendientes</div>
-                    <div class="text-3xl font-bold text-yellow-600 dark:text-yellow-400">{{ $pending->count() }}</div>
+        <div class="col-md-3">
+            <x-backend.card>
+                <div class="card-body text-center">
+                    <div class="small text-muted mb-2">Solicitudes Pendientes</div>
+                    <div class="h2 text-warning mb-1">{{ $pending->count() }}</div>
                 </div>
+            </x-backend.card>
+        </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">Invitaciones Enviadas</div>
-                    <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ $pendingInvitations->count() }}</div>
+        <div class="col-md-3">
+            <x-backend.card>
+                <div class="card-body text-center">
+                    <div class="small text-muted mb-2">Invitaciones Enviadas</div>
+                    <div class="h2 text-primary mb-1">{{ $pendingInvitations->count() }}</div>
                 </div>
+            </x-backend.card>
+        </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                    <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">Espacios Disponibles</div>
-                    <div class="text-3xl font-bold text-green-600 dark:text-green-400">{{ $conversation->max_participants - $accepted->count() }}</div>
+        <div class="col-md-3">
+            <x-backend.card>
+                <div class="card-body text-center">
+                    <div class="small text-muted mb-2">Espacios Disponibles</div>
+                    <div class="h2 text-success mb-1">{{ $conversation->max_participants - $accepted->count() }}</div>
                 </div>
+            </x-backend.card>
+        </div>
+    </div>
+
+    <!-- Pending Requests -->
+    @if($pending->count() > 0)
+        <x-backend.card class="mb-4">
+            <div class="card-header">
+                <h3 class="h5 mb-0">Solicitudes Pendientes ({{ $pending->count() }})</h3>
             </div>
-
-            <!-- Pending Requests -->
-            @if($pending->count() > 0)
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-                    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Solicitudes Pendientes ({{ $pending->count() }})</h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-4">
-                            @foreach($pending as $participation)
-                                <div class="flex items-center justify-between p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
-                                            {{ substr($participation->user->name, 0, 1) }}
-                                        </div>
-                                        <div>
-                                            <h4 class="font-medium text-gray-900 dark:text-white">
-                                                <a href="{{ route('users.show', $participation->user) }}" class="hover:text-indigo-600 dark:hover:text-indigo-400">
-                                                    {{ $participation->user->name }}
-                                                </a>
-                                            </h4>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">{{ $participation->user->email }}</p>
-                                            <p class="text-xs text-gray-500 mt-1">Solicitó unirse {{ $participation->created_at->diffForHumans() }}</p>
-                                        </div>
+            <div class="card-body">
+                @foreach($pending as $participation)
+                    <div class="card border-warning bg-light mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar bg-warning text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; font-size: 1.25rem;">
+                                        {{ substr($participation->user->name, 0, 1) }}
                                     </div>
-                                    <div class="flex gap-2">
-                                        <form action="{{ route('conversations.participants.approve', [$conversation, $participation]) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm">
-                                                ✓ Aprobar
-                                            </button>
-                                        </form>
-                                        <form action="{{ route('conversations.participants.reject', [$conversation, $participation]) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition text-sm">
-                                                ✗ Rechazar
-                                            </button>
-                                        </form>
+                                    <div>
+                                        <h4 class="h6 mb-1">
+                                            <a href="{{ route('users.show', $participation->user) }}" class="text-decoration-none">
+                                                {{ $participation->user->name }}
+                                            </a>
+                                        </h4>
+                                        <p class="text-muted small mb-1">{{ $participation->user->email }}</p>
+                                        <p class="text-muted small mb-0">Solicitó unirse {{ $participation->created_at->diffForHumans() }}</p>
                                     </div>
                                 </div>
-                            @endforeach
+                                <div class="d-flex gap-2">
+                                    <form action="{{ route('conversations.participants.approve', [$conversation, $participation]) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="ti ti-check me-1"></i>
+                                            Aprobar
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('conversations.participants.reject', [$conversation, $participation]) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="ti ti-x me-1"></i>
+                                            Rechazar
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endif
+                @endforeach
+            </div>
+        </x-backend.card>
+    @endif
 
-            <!-- Accepted Participants -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Participantes Activos ({{ $accepted->count() }})</h3>
-                </div>
-                <div class="p-6">
-                    @if($accepted->count() > 0)
-                        <div class="grid md:grid-cols-2 gap-4">
-                            @foreach($accepted as $participation)
-                                <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
-                                            {{ substr($participation->user->name, 0, 1) }}
-                                        </div>
-                                        <div>
-                                            <h4 class="font-medium text-gray-900 dark:text-white">
-                                                <a href="{{ route('users.show', $participation->user) }}" class="hover:text-indigo-600 dark:hover:text-indigo-400">
-                                                    {{ $participation->user->name }}
-                                                </a>
-                                                @if($participation->user_id === $conversation->owner_id)
-                                                    <span class="text-xs bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 px-2 py-1 rounded ml-2">Organizador</span>
-                                                @else
-                                                    <span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 px-2 py-1 rounded ml-2">{{ ucfirst($participation->role) }}</span>
-                                                @endif
-                                            </h4>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">Unido {{ $participation->joined_at?->diffForHumans() ?? $participation->created_at->diffForHumans() }}</p>
-                                        </div>
-                                    </div>
-                                    @if($participation->user_id !== $conversation->owner_id)
-                                        <div class="relative group">
-                                            <button class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2">
-                                                ⋮
-                                            </button>
-                                            <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10">
-                                                <form action="{{ route('conversations.participants.update-role', [$conversation, $participation]) }}" method="POST" class="p-2">
-                                                    @csrf
-                                                    <select name="role" onchange="this.form.submit()" class="w-full text-sm rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                                                        <option value="member" {{ $participation->role === 'member' ? 'selected' : '' }}>Miembro</option>
-                                                        <option value="moderator" {{ $participation->role === 'moderator' ? 'selected' : '' }}>Moderador</option>
-                                                        <option value="co_host" {{ $participation->role === 'co_host' ? 'selected' : '' }}>Co-anfitrión</option>
-                                                    </select>
-                                                </form>
-                                                <form action="{{ route('conversations.participants.remove', [$conversation, $participation]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar a este participante?')" class="p-2 border-t border-gray-200 dark:border-gray-700">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="w-full text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 px-2 py-1 rounded">
-                                                        Eliminar
-                                                    </button>
-                                                </form>
+    <!-- Accepted Participants -->
+    <x-backend.card class="mb-4">
+        <div class="card-header">
+            <h3 class="h5 mb-0">Participantes Activos ({{ $accepted->count() }})</h3>
+        </div>
+        <div class="card-body">
+            @if($accepted->count() > 0)
+                <div class="row g-3">
+                    @foreach($accepted as $participation)
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; font-size: 1.25rem;">
+                                                {{ substr($participation->user->name, 0, 1) }}
+                                            </div>
+                                            <div>
+                                                <h4 class="h6 mb-1">
+                                                    <a href="{{ route('users.show', $participation->user) }}" class="text-decoration-none">
+                                                        {{ $participation->user->name }}
+                                                    </a>
+                                                    @if($participation->user_id === $conversation->owner_id)
+                                                        <span class="badge bg-purple ms-2">Organizador</span>
+                                                    @else
+                                                        <span class="badge bg-info ms-2">{{ ucfirst($participation->role) }}</span>
+                                                    @endif
+                                                </h4>
+                                                <p class="text-muted small mb-0">Unido {{ $participation->joined_at?->diffForHumans() ?? $participation->created_at->diffForHumans() }}</p>
                                             </div>
                                         </div>
-                                    @endif
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-                            No hay participantes activos aún.
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Pending Invitations -->
-            @if($pendingInvitations->count() > 0)
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-                    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Invitaciones Pendientes ({{ $pendingInvitations->count() }})</h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-3">
-                            @foreach($pendingInvitations as $invitation)
-                                <div class="flex items-center justify-between p-3 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg">
-                                    <div>
-                                        <p class="font-medium text-gray-900 dark:text-white">
-                                            @if($invitation->invitee)
-                                                {{ $invitation->invitee->name }} ({{ $invitation->invitee->email }})
-                                            @else
-                                                {{ $invitation->email }}
-                                            @endif
-                                        </p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                                            Invitado por {{ $invitation->inviter->name }} {{ $invitation->created_at->diffForHumans() }}
-                                            · Expira {{ $invitation->expires_at->diffForHumans() }}
-                                        </p>
+                                        @if($participation->user_id !== $conversation->owner_id)
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                                    <i class="ti ti-dots-vertical"></i>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form action="{{ route('conversations.participants.update-role', [$conversation, $participation]) }}" method="POST" class="px-3 py-2">
+                                                            @csrf
+                                                            <label class="form-label small mb-2">Cambiar rol</label>
+                                                            <select name="role" onchange="this.form.submit()" class="form-select form-select-sm">
+                                                                <option value="member" {{ $participation->role === 'member' ? 'selected' : '' }}>Miembro</option>
+                                                                <option value="moderator" {{ $participation->role === 'moderator' ? 'selected' : '' }}>Moderador</option>
+                                                                <option value="co_host" {{ $participation->role === 'co_host' ? 'selected' : '' }}>Co-anfitrión</option>
+                                                            </select>
+                                                        </form>
+                                                    </li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li>
+                                                        <form action="{{ route('conversations.participants.remove', [$conversation, $participation]) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar a este participante?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="dropdown-item text-danger">
+                                                                <i class="ti ti-trash me-2"></i>
+                                                                Eliminar
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        @endif
                                     </div>
-                                    <span class="text-xs bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 px-3 py-1 rounded-full">
-                                        Pendiente
-                                    </span>
                                 </div>
-                            @endforeach
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-5 text-muted">
+                    <i class="ti ti-users-off" style="font-size: 4rem;"></i>
+                    <p class="mt-3">No hay participantes activos aún.</p>
                 </div>
             @endif
         </div>
-    </div>
+    </x-backend.card>
+
+    <!-- Pending Invitations -->
+    @if($pendingInvitations->count() > 0)
+        <x-backend.card>
+            <div class="card-header">
+                <h3 class="h5 mb-0">Invitaciones Pendientes ({{ $pendingInvitations->count() }})</h3>
+            </div>
+            <div class="card-body">
+                @foreach($pendingInvitations as $invitation)
+                    <div class="card border-primary bg-light mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="mb-1 fw-medium">
+                                        @if($invitation->invitee)
+                                            {{ $invitation->invitee->name }} ({{ $invitation->invitee->email }})
+                                        @else
+                                            {{ $invitation->email }}
+                                        @endif
+                                    </p>
+                                    <p class="text-muted small mb-0">
+                                        Invitado por {{ $invitation->inviter->name }} {{ $invitation->created_at->diffForHumans() }}
+                                        · Expira {{ $invitation->expires_at->diffForHumans() }}
+                                    </p>
+                                </div>
+                                <span class="badge bg-primary">Pendiente</span>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </x-backend.card>
+    @endif
 </x-app-layout>

@@ -63,52 +63,52 @@ new class extends Component
 }; ?>
 
 <section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Profile Information') }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Update your account's profile information and email address.") }}
+    <header class="mb-4">
+        <h4>{{ __('Información del Perfil') }}</h4>
+        <p class="text-muted small">
+            {{ __("Actualiza la información de tu cuenta y dirección de correo electrónico.") }}
         </p>
     </header>
 
-    <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+    <form wire:submit="updateProfileInformation">
+        <div class="mb-3">
+            <x-backend.input-label for="name" value="{{ __('Nombre') }}" />
+            <x-backend.text-input wire:model="name" id="name" name="name" type="text" required autofocus autocomplete="name" />
+            <x-backend.input-error :messages="$errors->get('name')" />
         </div>
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+        <div class="mb-3">
+            <x-backend.input-label for="email" value="{{ __('Email') }}" />
+            <x-backend.text-input wire:model="email" id="email" name="email" type="email" required autocomplete="username" />
+            <x-backend.input-error :messages="$errors->get('email')" />
 
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button wire:click.prevent="sendVerification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            {{ __('Click here to re-send the verification email.') }}
+                <div class="mt-2">
+                    <x-backend.alert type="warning" :dismissible="false">
+                        {{ __('Tu dirección de correo no está verificada.') }}
+                        <button wire:click.prevent="sendVerification" class="btn btn-link p-0 text-decoration-underline">
+                            {{ __('Haz clic aquí para reenviar el correo de verificación.') }}
                         </button>
-                    </p>
+                    </x-backend.alert>
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
+                        <x-backend.alert type="success" class="mt-2">
+                            {{ __('Se ha enviado un nuevo enlace de verificación a tu correo.') }}
+                        </x-backend.alert>
                     @endif
                 </div>
             @endif
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+        <div class="d-flex align-items-center gap-3">
+            <x-backend.button type="submit">
+                <i class="ti ti-device-floppy me-1"></i>
+                {{ __('Guardar') }}
+            </x-backend.button>
 
-            <x-action-message class="me-3" on="profile-updated">
-                {{ __('Saved.') }}
+            <x-action-message class="text-success small" on="profile-updated">
+                <i class="ti ti-check me-1"></i>
+                {{ __('Guardado.') }}
             </x-action-message>
         </div>
     </form>

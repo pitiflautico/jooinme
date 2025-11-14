@@ -1,208 +1,214 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Valorar Sesión
-            </h2>
-            <a href="{{ route('conversations.show', $conversation) }}" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition text-sm">
-                ← Volver
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Valorar Sesión</h2>
+            <a href="{{ route('conversations.show', $conversation) }}" class="btn btn-secondary btn-sm">
+                <i class="ti ti-arrow-left me-1"></i>
+                Volver
             </a>
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
-                <div class="mb-6">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">{{ $conversation->title }}</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Sesión: {{ $scheduleSlot->scheduled_at->format('d/m/Y H:i') }}</p>
-                </div>
+    <x-backend.card>
+        <div class="card-body">
+            <div class="mb-4">
+                <h3 class="h4 mb-2">{{ $conversation->title }}</h3>
+                <p class="text-muted">Sesión: {{ $scheduleSlot->scheduled_at->format('d/m/Y H:i') }}</p>
+            </div>
 
-                <form action="{{ route('feedback.store', $scheduleSlot) }}" method="POST" class="space-y-8">
-                    @csrf
+            <form action="{{ route('feedback.store', $scheduleSlot) }}" method="POST">
+                @csrf
 
-                    <!-- Attendance -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
-                        <h4 class="font-semibold text-gray-900 dark:text-white mb-4">¿Asististe a esta sesión?</h4>
-                        <div class="flex gap-4">
-                            <label class="flex items-center">
-                                <input type="radio" name="attended" value="1" checked class="mr-2">
-                                <span class="text-gray-700 dark:text-gray-300">Sí, asistí</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="attended" value="0" class="mr-2">
-                                <span class="text-gray-700 dark:text-gray-300">No asistí</span>
-                            </label>
+                <!-- Attendance -->
+                <div class="bg-light rounded p-4 mb-4">
+                    <h4 class="h6 mb-3">¿Asististe a esta sesión?</h4>
+                    <div class="d-flex gap-4">
+                        <div class="form-check">
+                            <input type="radio" name="attended" value="1" checked class="form-check-input" id="attended_yes">
+                            <label class="form-check-label" for="attended_yes">Sí, asistí</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" name="attended" value="0" class="form-check-input" id="attended_no">
+                            <label class="form-check-label" for="attended_no">No asistí</label>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Overall Rating -->
-                    <div>
-                        <label class="block text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                            Valoración General *
-                        </label>
-                        <div class="flex gap-4">
+                <!-- Overall Rating -->
+                <div class="mb-4">
+                    <label class="form-label h5">Valoración General *</label>
+                    <div class="d-flex gap-2 fs-1">
+                        @for($i = 1; $i <= 5; $i++)
+                            <label class="star-rating cursor-pointer">
+                                <input type="radio" name="rating" value="{{ $i }}" required class="d-none">
+                                <i class="ti ti-star text-muted star-icon"></i>
+                            </label>
+                        @endfor
+                    </div>
+                    <x-backend.input-error field="rating" />
+                </div>
+
+                <!-- Detailed Ratings -->
+                <div class="bg-light rounded p-4 mb-4">
+                    <h4 class="h6 mb-4">Valoración Detallada (Opcional)</h4>
+
+                    <!-- Content Rating -->
+                    <div class="mb-4">
+                        <label class="form-label small">Contenido</label>
+                        <div class="d-flex gap-2 fs-3">
                             @for($i = 1; $i <= 5; $i++)
-                                <label class="cursor-pointer group">
-                                    <input type="radio" name="rating" value="{{ $i }}" required class="peer sr-only">
-                                    <div class="text-5xl peer-checked:text-yellow-500 text-gray-300 dark:text-gray-600 group-hover:text-yellow-400 transition">
-                                        ★
-                                    </div>
+                                <label class="star-rating cursor-pointer">
+                                    <input type="radio" name="content_rating" value="{{ $i }}" class="d-none">
+                                    <i class="ti ti-star text-muted star-icon"></i>
                                 </label>
                             @endfor
                         </div>
-                        @error('rating')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
 
-                    <!-- Detailed Ratings -->
-                    <div class="space-y-6 bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
-                        <h4 class="font-semibold text-gray-900 dark:text-white mb-4">Valoración Detallada (Opcional)</h4>
-
-                        <!-- Content Rating -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Contenido
-                            </label>
-                            <div class="flex gap-2">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <label class="cursor-pointer group">
-                                        <input type="radio" name="content_rating" value="{{ $i }}" class="peer sr-only">
-                                        <div class="text-3xl peer-checked:text-yellow-500 text-gray-300 dark:text-gray-600 group-hover:text-yellow-400 transition">
-                                            ★
-                                        </div>
-                                    </label>
-                                @endfor
-                            </div>
-                        </div>
-
-                        <!-- Organization Rating -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Organización
-                            </label>
-                            <div class="flex gap-2">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <label class="cursor-pointer group">
-                                        <input type="radio" name="organization_rating" value="{{ $i }}" class="peer sr-only">
-                                        <div class="text-3xl peer-checked:text-yellow-500 text-gray-300 dark:text-gray-600 group-hover:text-yellow-400 transition">
-                                            ★
-                                        </div>
-                                    </label>
-                                @endfor
-                            </div>
-                        </div>
-
-                        <!-- Atmosphere Rating -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Ambiente
-                            </label>
-                            <div class="flex gap-2">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <label class="cursor-pointer group">
-                                        <input type="radio" name="atmosphere_rating" value="{{ $i }}" class="peer sr-only">
-                                        <div class="text-3xl peer-checked:text-yellow-500 text-gray-300 dark:text-gray-600 group-hover:text-yellow-400 transition">
-                                            ★
-                                        </div>
-                                    </label>
-                                @endfor
-                            </div>
+                    <!-- Organization Rating -->
+                    <div class="mb-4">
+                        <label class="form-label small">Organización</label>
+                        <div class="d-flex gap-2 fs-3">
+                            @for($i = 1; $i <= 5; $i++)
+                                <label class="star-rating cursor-pointer">
+                                    <input type="radio" name="organization_rating" value="{{ $i }}" class="d-none">
+                                    <i class="ti ti-star text-muted star-icon"></i>
+                                </label>
+                            @endfor
                         </div>
                     </div>
 
-                    <!-- Comment -->
+                    <!-- Atmosphere Rating -->
+                    <div class="mb-0">
+                        <label class="form-label small">Ambiente</label>
+                        <div class="d-flex gap-2 fs-3">
+                            @for($i = 1; $i <= 5; $i++)
+                                <label class="star-rating cursor-pointer">
+                                    <input type="radio" name="atmosphere_rating" value="{{ $i }}" class="d-none">
+                                    <i class="ti ti-star text-muted star-icon"></i>
+                                </label>
+                            @endfor
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comment -->
+                <div class="mb-4">
+                    <x-backend.input-label for="comment" value="Comentarios (Opcional)" />
+                    <x-backend.textarea id="comment" name="comment" rows="4" placeholder="Comparte tu experiencia..."></x-backend.textarea>
+                    <x-backend.input-error field="comment" />
+                </div>
+
+                <!-- Testimonial -->
+                <div class="mb-4">
+                    <x-backend.input-label for="testimonial" value="Testimonio Público (Opcional)" />
+                    <x-backend.textarea id="testimonial" name="testimonial" rows="3" placeholder="Un breve testimonio que podría aparecer en el perfil del organizador..."></x-backend.textarea>
+                    <div class="mt-2">
+                        <div class="form-check">
+                            <input type="checkbox" name="is_public" value="1" class="form-check-input" id="is_public">
+                            <label class="form-check-label small" for="is_public">Hacer público este testimonio</label>
+                        </div>
+                    </div>
+                    <x-backend.input-error field="testimonial" />
+                </div>
+
+                <!-- Would Recommend -->
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input type="checkbox" name="would_recommend" value="1" checked class="form-check-input" id="would_recommend">
+                        <label class="form-check-label" for="would_recommend">Recomendaría esta conversación</label>
+                    </div>
+                </div>
+
+                <!-- Rate Participants -->
+                @if($participants->count() > 0)
+                    <hr class="my-4">
                     <div>
-                        <label for="comment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Comentarios (Opcional)
-                        </label>
-                        <textarea id="comment" name="comment" rows="4" placeholder="Comparte tu experiencia..." class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"></textarea>
-                        @error('comment')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <h4 class="h5 mb-3">Valora a otros participantes (Opcional)</h4>
+                        <p class="text-muted small mb-4">
+                            Ayuda a construir la reputación de la comunidad valorando a otros participantes
+                        </p>
 
-                    <!-- Testimonial -->
-                    <div>
-                        <label for="testimonial" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Testimonio Público (Opcional)
-                        </label>
-                        <textarea id="testimonial" name="testimonial" rows="3" placeholder="Un breve testimonio que podría aparecer en el perfil del organizador..." class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"></textarea>
-                        <div class="mt-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="is_public" value="1" class="rounded border-gray-300 text-indigo-600 mr-2">
-                                <span class="text-sm text-gray-600 dark:text-gray-400">Hacer público este testimonio</span>
-                            </label>
-                        </div>
-                        @error('testimonial')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Would Recommend -->
-                    <div>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="would_recommend" value="1" checked class="rounded border-gray-300 text-indigo-600 mr-2">
-                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Recomendaría esta conversación</span>
-                        </label>
-                    </div>
-
-                    <!-- Rate Participants -->
-                    @if($participants->count() > 0)
-                        <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                                Valora a otros participantes (Opcional)
-                            </h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                                Ayuda a construir la reputación de la comunidad valorando a otros participantes
-                            </p>
-
-                            <div class="space-y-4">
-                                @foreach($participants as $participant)
-                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                        <div class="flex items-center gap-3 mb-3">
-                                            <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
-                                                {{ substr($participant->name, 0, 1) }}
+                        <div class="row g-3">
+                            @foreach($participants as $participant)
+                                <div class="col-md-6">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center gap-3 mb-3">
+                                                <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                    {{ substr($participant->name, 0, 1) }}
+                                                </div>
+                                                <p class="mb-0 fw-medium">{{ $participant->name }}</p>
                                             </div>
-                                            <div>
-                                                <p class="font-medium text-gray-900 dark:text-white">{{ $participant->name }}</p>
+
+                                            <div class="d-flex gap-2 mb-3">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    <label class="star-rating cursor-pointer">
+                                                        <input type="radio" name="participant_ratings[{{ $loop->parent->index }}][rating]" value="{{ $i }}" class="d-none">
+                                                        <input type="hidden" name="participant_ratings[{{ $loop->parent->index }}][user_id]" value="{{ $participant->id }}">
+                                                        <i class="ti ti-star text-muted star-icon fs-4"></i>
+                                                    </label>
+                                                @endfor
                                             </div>
-                                        </div>
 
-                                        <div class="flex gap-2 mb-2">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                <label class="cursor-pointer group">
-                                                    <input type="radio" name="participant_ratings[{{ $loop->parent->index }}][rating]" value="{{ $i }}" class="peer sr-only">
-                                                    <input type="hidden" name="participant_ratings[{{ $loop->parent->index }}][user_id]" value="{{ $participant->id }}">
-                                                    <div class="text-2xl peer-checked:text-yellow-500 text-gray-300 dark:text-gray-600 group-hover:text-yellow-400 transition">
-                                                        ★
-                                                    </div>
-                                                </label>
-                                            @endfor
+                                            <input type="text"
+                                                   name="participant_ratings[{{ $loop->index }}][comment]"
+                                                   placeholder="Comentario breve (opcional)"
+                                                   class="form-control form-control-sm">
                                         </div>
-
-                                        <input type="text"
-                                               name="participant_ratings[{{ $loop->index }}][comment]"
-                                               placeholder="Comentario breve (opcional)"
-                                               class="w-full text-sm rounded border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300">
                                     </div>
-                                @endforeach
-                            </div>
+                                </div>
+                            @endforeach
                         </div>
-                    @endif
-
-                    <!-- Submit -->
-                    <div class="flex justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
-                        <a href="{{ route('conversations.show', $conversation) }}" class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition">
-                            Cancelar
-                        </a>
-                        <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
-                            Enviar Valoración
-                        </button>
                     </div>
-                </form>
-            </div>
+                @endif
+
+                <!-- Submit -->
+                <div class="d-flex justify-content-end gap-2 pt-4 border-top mt-4">
+                    <a href="{{ route('conversations.show', $conversation) }}" class="btn btn-secondary">
+                        Cancelar
+                    </a>
+                    <x-backend.button type="submit">
+                        Enviar Valoración
+                    </x-backend.button>
+                </div>
+            </form>
         </div>
-    </div>
+    </x-backend.card>
+
+    <style>
+        .star-rating:hover .star-icon,
+        .star-rating input:checked ~ .star-icon {
+            color: #ffc107 !important;
+        }
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        // Handle star rating clicks
+        document.querySelectorAll('.star-rating').forEach(label => {
+            const input = label.querySelector('input');
+            const icon = label.querySelector('.star-icon');
+
+            label.addEventListener('click', function() {
+                // Update all stars in the same group
+                const group = this.closest('.d-flex');
+                const allStars = group.querySelectorAll('.star-icon');
+                const allInputs = group.querySelectorAll('input[type="radio"]');
+                const clickedIndex = Array.from(allInputs).indexOf(input);
+
+                allStars.forEach((star, index) => {
+                    if (index <= clickedIndex) {
+                        star.classList.remove('text-muted');
+                        star.classList.add('text-warning');
+                    } else {
+                        star.classList.remove('text-warning');
+                        star.classList.add('text-muted');
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
