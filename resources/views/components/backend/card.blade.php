@@ -1,8 +1,8 @@
 @props(['title' => null, 'headerAction' => null])
 
-<div {{ $attributes->merge(['class' => 'card']) }}>
+<div {{ $attributes->merge(['class' => 'card app-card']) }}>
     @if($title || $headerAction)
-    <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="card-header app-card-header d-flex justify-content-between align-items-center">
         @if($title)
         <h5 class="card-title mb-0">{{ $title }}</h5>
         @endif
@@ -14,7 +14,7 @@
     </div>
     @endif
 
-    <div class="card-body">
+    <div class="card-body app-card-body">
         {{ $slot }}
     </div>
 </div>
