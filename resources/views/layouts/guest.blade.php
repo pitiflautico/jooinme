@@ -9,7 +9,7 @@
     <title>{{ config('app.name', 'JoinMe') }} - @yield('title', 'Login')</title>
 
     <!-- Favicon -->
-    <link href="{{ asset('ki-admin/images/favicon.png') }}" rel="icon" type="image/x-icon">
+    <link href="{{ asset('ki-admin/images/favicon.svg') }}" rel="icon" type="image/svg+xml">
 
     <!-- Animation CSS -->
     <link href="{{ asset('ki-admin/vendor/animate.min.css') }}" rel="stylesheet">
@@ -35,7 +35,7 @@
         <div class="auth-card animate__animated animate__fadeIn">
             <div class="auth-logo">
                 <a href="/">
-                    <img alt="{{ config('app.name') }}" src="{{ asset('images/logo.png') }}">
+                    <img alt="{{ config('app.name') }}" src="{{ asset('images/logo.svg') }}">
                 </a>
             </div>
 

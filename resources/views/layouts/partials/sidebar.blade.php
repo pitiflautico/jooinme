@@ -4,7 +4,7 @@
         <!-- Logo -->
         <div class="logo-wrapper">
             <a class="logo d-inline-block" href="{{ route('dashboard') }}">
-                <img alt="{{ config('app.name') }}" src="{{ asset('images/logo.png') }}" style="height: 40px;">
+                <img alt="{{ config('app.name') }}" src="{{ asset('images/logo.svg') }}" style="height: 40px;">
             </a>
             <button class="sidebar-toggle btn btn-icon btn-sm" type="button">
                 <i class="ti ti-x"></i>
