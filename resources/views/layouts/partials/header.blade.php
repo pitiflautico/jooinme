@@ -40,7 +40,7 @@
                     <li class="dropdown-header d-flex justify-content-between align-items-center">
                         <span class="fw-bold">Notifications</span>
                         @if(auth()->user()->unreadNotifications->count() > 0)
-                        <form action="{{ route('notifications.mark-all-read') }}" method="POST" class="d-inline">
+                        <form action="{{ route('notifications.markAllAsRead') }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-link btn-sm p-0 text-decoration-none">Mark all read</button>
                         </form>
@@ -50,7 +50,7 @@
 
                     @forelse(auth()->user()->notifications->take(5) as $notification)
                     <li>
-                        <a class="dropdown-item {{ $notification->read_at ? '' : 'unread' }}" href="{{ route('notifications') }}">
+                        <a class="dropdown-item {{ $notification->read_at ? '' : 'unread' }}" href="{{ route('notifications.index') }}">
                             <div class="d-flex">
                                 <div class="flex-shrink-0">
                                     <div class="avatar-sm">
@@ -79,7 +79,7 @@
                     @if(auth()->user()->notifications->count() > 5)
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item text-center text-primary" href="{{ route('notifications') }}">
+                        <a class="dropdown-item text-center text-primary" href="{{ route('notifications.index') }}">
                             View all notifications
                         </a>
                     </li>

@@ -64,7 +64,7 @@
 
                 <!-- Notifications -->
                 <li class="sidebar-item">
-                    <a class="sidebar-link {{ request()->routeIs('notifications') ? 'active' : '' }}" href="{{ route('notifications') }}">
+                    <a class="sidebar-link {{ request()->routeIs('notifications.index') ? 'active' : '' }}" href="{{ route('notifications.index') }}">
                         <svg class="icon">
                             <use xlink:href="{{ asset('ki-admin/svg/_sprite.svg#bell') }}"></use>
                         </svg>
