@@ -1,52 +1,77 @@
 <x-guest-layout>
+    <h2 class="auth-title">Create Account</h2>
+    <p class="auth-subtitle">Join us today and start connecting</p>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
         <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        <div class="form-group">
+            <x-backend.input-label for="name" :value="__('Full Name')" />
+            <x-backend.text-input
+                id="name"
+                type="text"
+                name="name"
+                :value="old('name')"
+                required
+                autofocus
+                autocomplete="name"
+                placeholder="Enter your full name" />
+            <x-backend.input-error :messages="$errors->get('name')" />
         </div>
 
         <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="form-group">
+            <x-backend.input-label for="email" :value="__('Email Address')" />
+            <x-backend.text-input
+                id="email"
+                type="email"
+                name="email"
+                :value="old('email')"
+                required
+                autocomplete="username"
+                placeholder="Enter your email" />
+            <x-backend.input-error :messages="$errors->get('email')" />
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="form-group">
+            <x-backend.input-label for="password" :value="__('Password')" />
+            <x-backend.text-input
+                id="password"
+                type="password"
+                name="password"
+                required
+                autocomplete="new-password"
+                placeholder="Create a password" />
+            <x-backend.input-error :messages="$errors->get('password')" />
         </div>
 
         <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div class="form-group">
+            <x-backend.input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <x-backend.text-input
+                id="password_confirmation"
+                type="password"
+                name="password_confirmation"
+                required
+                autocomplete="new-password"
+                placeholder="Confirm your password" />
+            <x-backend.input-error :messages="$errors->get('password_confirmation')" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+        <!-- Submit Button -->
+        <x-backend.button type="submit" variant="primary" class="btn-auth">
+            <i class="ti ti-user-plus me-2"></i>
+            {{ __('Create Account') }}
+        </x-backend.button>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+        <!-- Login Link -->
+        <div class="text-center mt-3">
+            <span class="text-muted">Already have an account?</span>
+            <a class="auth-link ms-1" href="{{ route('login') }}">
+                {{ __('Sign in') }}
+            </a>
         </div>
     </form>
 </x-guest-layout>

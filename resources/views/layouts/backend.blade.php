@@ -10,6 +10,7 @@
 
     <!-- Favicon -->
     <link href="{{ asset('ki-admin/images/favicon.png') }}" rel="icon" type="image/x-icon">
+    <link href="{{ asset('ki-admin/images/favicon.png') }}" rel="shortcut icon" type="image/x-icon">
 
     <!-- Animation CSS -->
     <link href="{{ asset('ki-admin/vendor/animate.min.css') }}" rel="stylesheet">
@@ -49,16 +50,22 @@
             <div class="content-wrapper">
                 <div class="container-fluid">
 
-                    <!-- Page Header from old layout -->
-                    @isset($header)
+                    <!-- Page Title -->
+                    @if(isset($pageTitle) || View::hasSection('page-title'))
                     <div class="row">
                         <div class="col-12">
-                            <div class="page-title-box d-flex align-items-center justify-content-between mb-4">
-                                <h4 class="mb-0">{{ $header }}</h4>
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">
+                                    {{ $pageTitle ?? '' }}
+                                    @yield('page-title')
+                                </h4>
+                                <div class="page-title-right">
+                                    @yield('page-actions')
+                                </div>
                             </div>
                         </div>
                     </div>
-                    @endisset
+                    @endif
 
                     <!-- Flash Messages -->
                     @if(session('success'))
@@ -78,9 +85,8 @@
                     @endif
 
                     <!-- Main Content -->
-                    <main>
-                        {{ $slot }}
-                    </main>
+                    {{ $slot ?? '' }}
+                    @yield('content')
 
                 </div>
             </div>
